@@ -1,0 +1,68 @@
+﻿@model EmployeeViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Employees Table</h2>
+<br/>
+<br/>
+@*<a href="/employees/add" class="btn btn-primary"><span class="glyphicon glyphicon-plus">Add Employee</span></a>*@
+
+@if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+{
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+    <span class="glyphicon glyphicon-plus"> Add Employee </span>
+</button>
+}
+<br />
+<br />
+<br/>
+@if(Model.Employees == null || Model.Employees.Count == 0)
+{
+    <h4>No Employees Found</h4>
+}
+else
+{
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Email</th>
+                <th>Department</th>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+            @foreach (Employee emp in Model.Employees)
+            {
+                <tr id="@emp.Id">
+
+                    <td>@emp.Name</td>
+                    <td>@emp.Age</td>
+                    <td>@emp.Gender</td>
+                    <td>@emp.Email</td>
+                    <td>@emp.Department.Name</td>
+                    <td>
+                        @Html.Partial("_PartialControl", emp.Id)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+@section scripts{
+    @Scripts.Render("~/bundles/confirmDelete")
+@*<script src="~/Scripts/SiteScripts/confirmDelete.js"></script>*@
+
+    <script>
+        function addSuccess() {
+            $('#myModal').modal('hide'),
+            document.getElementById("form0").reset();
+        }
+    </script>
+    
+    }
+
+@Html.Partial("_PartialAddEmployee", Model)
